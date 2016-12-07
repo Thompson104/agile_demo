@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="robot_ip"                   />
+	<arg name="min_payload"  default="0.0" />
+	<arg name="max_payload"  default="5.0" />
+	<arg name="prefix" default="ur_"       />
+
+	<include file="$(find demo)/launch/robot_description.launch" />
+
+	<include file="$(find ur_modern_driver)/launch/ur_common.launch">
+		<arg name="prefix"      value ="$(arg prefix)"      />
+		<arg name="robot_ip"    value ="$(arg robot_ip)"    />
+		<arg name="min_payload" value ="$(arg min_payload)" />
+		<arg name="max_payload" value ="$(arg max_payload)" />
+	</include>
+
+</launch>
