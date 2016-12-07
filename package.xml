@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>agile_demo</name>
+	<version>1.0.0</version>
+	<description>Demo system for agile grasp.</description>
+	<license>TODO</license>
+
+	<author email="w.k.h.ko91@gmail.com">Wilson Ko</author>
+	<maintainer email="w.k.h.ko91@gmail.com">Wilson Ko</maintainer>
+
+	<buildtool_depend>catkin</buildtool_depend>
+	<buildtool_depend>xacro</buildtool_depend>
+	<buildtool_depend>ur_description</buildtool_depend>
+</package>
