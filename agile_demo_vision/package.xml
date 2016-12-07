@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>agile_demo_vision</name>
+	<version>0.0.0</version>
+	<description>The vision package for agile_demo.</description>
+	<license>Apache v2.0</license>
+
+	<maintainer email="w.k.h.ko91@gmail.com">Wilson Ko</maintainer>
+	<author email="w.k.h.ko91@gmail.com">Wilson Ko</author>
+
+	<buildtool_depend>catkin</buildtool_depend>
+	<depend>agile_demo_msgs</depend>
+	<depend>dr_eigen</depend>
+	<depend>dr_param</depend>
+	<depend>pcl_conversions</depend>
+	<depend>pcl_ros</depend>
+	<depend>roscpp</depend>
+	<depend>roslib</depend>
+	<depend>sensor_msgs</depend>
+	<depend>std_srvs</depend>
+</package>

@@ -5,7 +5,7 @@
 	<arg name="max_payload"  default="5.0" />
 	<arg name="prefix" default="ur_"       />
 
-	<include file="$(find demo)/launch/robot_description.launch" />
+	<include file="$(find agile_demo_simulation)/launch/robot_description.launch" />
 
 	<include file="$(find ur_modern_driver)/launch/ur_common.launch">
 		<arg name="prefix"      value ="$(arg prefix)"      />
