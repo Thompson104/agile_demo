@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(agile_demo)
+project(agile_demo_simulation)
 
 find_package(catkin REQUIRED xacro)
 

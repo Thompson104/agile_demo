@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-	<name>agile_demo</name>
+	<name>agile_demo_simulation</name>
 	<version>1.0.0</version>
 	<description>Demo system for agile grasp.</description>
 	<license>TODO</license>
