@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>agile_demo_launch</name>
+	<version>0.0.0</version>
+	<description>The agile_demo_launch package</description>
+	<license>GPLv3</license>
+
+	<maintainer email="w.k.h.ko91@gmail.com">Wilson Ko</maintainer>
+	<author email="w.k.h.ko91@gmail.com">Wilson Ko</author>
+
+	<buildtool_depend>catkin</buildtool_depend>
+</package>

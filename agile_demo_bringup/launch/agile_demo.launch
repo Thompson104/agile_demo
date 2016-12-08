@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+	<!--arg name="robot_ip"                   />
+	<arg name="min_payload"  default="0.0" />
+	<arg name="max_payload"  default="5.0" />
+	<arg name="prefix" default="ur_"       /-->
+
+	<arg name="cloud_topic"     default ="/camera/depth_registered/points"           />
+	<arg name="cloud_frame"     default ="map"                                       />
+	<arg name="cloud_type"      default ="0"                                         />
+	<arg name="svm_file_name"   default ="$(find agile_grasp)/svm_032015_20_20_same" />
+	<arg name="num_samples"     default ="4000"                                      />
+	<arg name="num_threads"     default ="4"                                         />
+	<arg name="num_clouds"      default ="1"                                         />
+	<arg name="min_inliers"     default ="10"                                        />
+	<arg name="plotting"        default ="2"                                         />
+	<arg name="marker_lifetime" default ="5"                                         />
+
+	<!--include file="$(find demo)/launch/robot_description.launch" /-->
+
+	<include file = "$(find agile_grasp)/launch/single_camera_grasps.launch">
+		<arg name="cloud_topic"     value ="$(arg cloud_topic)"     />
+		<arg name="cloud_frame"     value ="$(arg cloud_frame)"     />
+		<arg name="cloud_type"      value ="$(arg cloud_type)"      />
+		<arg name="svm_file_name"   value ="$(arg svm_file_name)"   />
+		<arg name="num_samples"     value ="$(arg num_samples)"     />
+		<arg name="num_threads"     value ="$(arg num_threads)"     />
+		<arg name="num_clouds"      value ="$(arg num_clouds)"      />
+		<arg name="min_inliers"     value ="$(arg min_inliers)"     />
+		<arg name="plotting"        value ="$(arg plotting)"        />
+		<arg name="marker_lifetime" value ="$(arg marker_lifetime)" />
+	</include>
+
+</launch>
