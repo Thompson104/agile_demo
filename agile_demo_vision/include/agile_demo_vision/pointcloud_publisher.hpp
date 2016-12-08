@@ -10,30 +10,33 @@
 
 namespace agile_demo_vision {
 
+using Point      = pcl::PointXYZ;
+using PointCloud = pcl::PointCloud<Point>;
+
 class PointCloudPublisher {
 private:
 	/// Node handle.
 	ros::NodeHandle nh_;
 
+	/// The pointcloud to publish.
 	sensor_msgs::PointCloud2 point_cloud_;
-	sensor_msgs::PointCloud2 clear_cloud_;
 
-	pcl::PointCloud<pcl::PointXYZ> pcl_clear_cloud_;
-	bool clear_is_true_;
+	/// Ros publisher for pointclouds.
+	ros::Publisher pointcloud_pub_;
 
-	ros::Publisher pub_pointcloud_;
-	ros::ServiceServer pub_static_pointcloud_;
-	ros::ServiceServer clear_static_pointcloud_;
+	/// Ros server for publishing a pointcloud.
+	ros::ServiceServer pub_pointcloud_server_;
 
+	/// Time to periodically publish a pointcloud.
 	ros::Timer publish_timer_;
+
+	/// Callback for timer.
+	void onPublishPointCloud(ros::TimerEvent const &);
 
 public:
 	PointCloudPublisher();
 
-	void onPublishPointCloud(ros::TimerEvent const &);
-	void onClearPointCloud(ros::TimerEvent const &);
-	// Publish a cropped static point cloud that is provided by the coordinator.
-	bool publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response & res);
-	bool clearStaticPointCloud(std_srvs::Empty::Request &, std_srvs::Empty::Response &);
+	/// Publish a point cloud from file.
+	bool publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response &);
 };
 }

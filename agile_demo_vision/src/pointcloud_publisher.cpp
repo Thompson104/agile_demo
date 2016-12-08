@@ -1,31 +1,57 @@
 #include "pointcloud_publisher.hpp"
 
-#include <ros/ros.h>
-#include <pcl_ros/point_cloud.h>
+#include <cmath>
+#include <dr_eigen/ros.hpp>
+#include <pcl/io/pcd_io.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/common/transforms.h>
-#include <limits>
+#include <ros/ros.h>
 
 namespace agile_demo_vision {
 
 PointCloudPublisher::PointCloudPublisher() : nh_{"~"} {
 	ros::Rate publish_rate{0.01};
-	pub_pointcloud_          = nh_.advertise<sensor_msgs::PointCloud2>("static_pointcloud", 10, true);
-	pub_static_pointcloud_   = nh_.advertiseService("publish_point_cloud", &PointCloudPublisher::publishPointCloud, this);
-	clear_static_pointcloud_ = nh_.advertiseService("clear_static_point_cloud", &PointCloudPublisher::clearStaticPointCloud, this);
-	publish_timer_           = nh_.createTimer(publish_rate, &PointCloudPublisher::onPublishPointCloud, this);
+	pointcloud_pub_         = nh_.advertise<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 10, true);
+	pub_pointcloud_server_  = nh_.advertiseService("publish_point_cloud", &PointCloudPublisher::publishPointCloud, this);
+	publish_timer_          = nh_.createTimer(publish_rate, &PointCloudPublisher::onPublishPointCloud, this);
+
+	ROS_INFO_STREAM("Point cloud publisher initialised!");
 }
 
 void PointCloudPublisher::onPublishPointCloud(ros::TimerEvent const &) {
-	//TODO
+	ros::Time now = ros::Time::now();
+	point_cloud_.header.stamp = now;
+	pointcloud_pub_.publish(point_cloud_);
 }
 
-bool PointCloudPublisher::publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response & res) {
-	//TODO
-}
+bool PointCloudPublisher::publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response &) {
+	// Read model
+	PointCloud::Ptr model = boost::make_shared<PointCloud>();
+	if (pcl::io::loadPCDFile(req.pcd_path.data, *model) == -1) {
+		ROS_ERROR_STREAM("No model found. Model path: " << req.pcd_path);
+		return false;
+	}
 
-bool PointCloudPublisher::clearStaticPointCloud(std_srvs::Empty::Request &, std_srvs::Empty::Response &) {
-	//TODO
+	// Check for empty model
+	if (model->empty()) {
+		ROS_ERROR_STREAM("Model point cloud is empty.");
+		return false;
+	}
+
+	// Publish
+	pcl::PointCloud<pcl::PointXYZ> transformed_point_cloud;
+
+	Eigen::Isometry3d parent_frame = dr::toEigen(req.pose);
+	Eigen::Affine3d affine_parent_frame{parent_frame.matrix()};
+
+	pcl::transformPointCloud(*model, transformed_point_cloud, affine_parent_frame);
+	pcl::toROSMsg(transformed_point_cloud, point_cloud_);
+	point_cloud_.header.frame_id = "map";
+
+	ros::TimerEvent event;
+	onPublishPointCloud(event);
+
+	return true;
 }
 
 }
