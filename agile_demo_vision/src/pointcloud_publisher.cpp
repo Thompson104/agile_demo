@@ -46,7 +46,7 @@ bool PointCloudPublisher::publishPointCloud(agile_demo_msgs::PublishPointCloud::
 
 	pcl::transformPointCloud(*model, transformed_point_cloud, affine_parent_frame);
 	pcl::toROSMsg(transformed_point_cloud, point_cloud_);
-	point_cloud_.header.frame_id = "map";
+	point_cloud_.header.frame_id = "world";
 
 	ros::TimerEvent event;
 	onPublishPointCloud(event);

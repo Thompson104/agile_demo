@@ -41,8 +41,13 @@ include_directories(
 )
 
 add_executable(motion_planner src/motion_planner.cpp)
+add_executable(grasp_planner src/grasp_planner.cpp)
 
 target_link_libraries(motion_planner
+	${catkin_LIBRARIES}
+)
+
+target_link_libraries(grasp_planner
 	${catkin_LIBRARIES}
 )
 

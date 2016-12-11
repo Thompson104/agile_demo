@@ -6,7 +6,7 @@
 	<arg name="prefix" default="ur_"       /-->
 
 	<arg name="cloud_topic"     default ="/camera/depth_registered/points"           />
-	<arg name="cloud_frame"     default ="map"                                       />
+	<arg name="cloud_frame"     default ="world"                                     />
 	<arg name="cloud_type"      default ="0"                                         />
 	<arg name="svm_file_name"   default ="$(find agile_grasp)/svm_032015_20_20_same" />
 	<arg name="num_samples"     default ="4000"                                      />
@@ -30,5 +30,7 @@
 		<arg name="plotting"        value ="$(arg plotting)"        />
 		<arg name="marker_lifetime" value ="$(arg marker_lifetime)" />
 	</include>
+
+	<node name ="pointcloud_publisher" pkg="agile_demo_vision" type="pointcloud_publisher" output="screen" />
 
 </launch>
