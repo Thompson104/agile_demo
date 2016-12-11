@@ -4,10 +4,12 @@
 #include <dr_eigen/ros.hpp>
 #include <dr_param/param.hpp>
 
-namespace agile_demo_motion {
+namespace agile_demo {
+namespace motion {
 
 GraspPlanner::GraspPlanner(ros::NodeHandle & node) {
 	agile_sub = node.subscribe("/find_grasps/grasps", 1, &GraspPlanner::agileGraspCallback, this);
+	ROS_INFO_STREAM("Grasp planner is initialised!");
 }
 
 boost::optional<Eigen::Isometry3d> GraspPlanner::findGrasp() {
@@ -30,20 +32,20 @@ void GraspPlanner::agileGraspCallback(agile_grasp::Grasps const & grasps) {
 	found_grasps = grasps;
 }
 
-}
+}}
 
-int main(int argc, char** argv) {
-	ros::init(argc, argv, "grasp_planner");
-	ros::NodeHandle node_handle{"~"};
-
-	ros::Publisher grasp_pub = node_handle.advertise<geometry_msgs::PoseStamped>("found_pose", 1, true);
-	agile_demo_motion::GraspPlanner grasp_planner{node_handle};
-	Eigen::Isometry3d pose         = *grasp_planner.findGrasp();
-	geometry_msgs::PoseStamped msg = dr::toRosPoseStamped(pose, "world", ros::Time::now());
-
-	grasp_pub.publish(msg);
-
-	ros::spin();
-	return 0;
-
-}
+//int main(int argc, char** argv) {
+//	ros::init(argc, argv, "grasp_planner");
+//	ros::NodeHandle node_handle{"~"};
+//
+//	ros::Publisher grasp_pub = node_handle.advertise<geometry_msgs::PoseStamped>("found_pose", 1, true);
+//	agile_demo_motion::GraspPlanner grasp_planner{node_handle};
+//	Eigen::Isometry3d pose         = *grasp_planner.findGrasp();
+//	geometry_msgs::PoseStamped msg = dr::toRosPoseStamped(pose, "world", ros::Time::now());
+//
+//	grasp_pub.publish(msg);
+//
+//	ros::spin();
+//	return 0;
+//
+//}

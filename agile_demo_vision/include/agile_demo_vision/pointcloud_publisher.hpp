@@ -8,7 +8,8 @@
 #include <std_srvs/Empty.h>
 #include <sensor_msgs/PointCloud2.h>
 
-namespace agile_demo_vision {
+namespace agile_demo {
+namespace vision {
 
 using Point      = pcl::PointXYZ;
 using PointCloud = pcl::PointCloud<Point>;
@@ -39,4 +40,5 @@ public:
 	/// Publish a point cloud from file.
 	bool publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response &);
 };
-}
+
+}}

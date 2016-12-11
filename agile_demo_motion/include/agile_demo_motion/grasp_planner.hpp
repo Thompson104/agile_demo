@@ -5,7 +5,8 @@
 #include <ros/ros.h>
 #include <Eigen/Geometry>
 
-namespace agile_demo_motion {
+namespace agile_demo {
+namespace motion {
 
 class GraspPlanner {
 protected:
@@ -29,4 +30,4 @@ protected:
 	void agileGraspCallback(agile_grasp::Grasps const & grasps);
 };
 
-}
+}}

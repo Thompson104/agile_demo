@@ -4,9 +4,9 @@
 #include <dr_eigen/eigen.hpp>
 #include <dr_param/param.hpp>
 #include <eigen_conversions/eigen_kdl.h>
-#include <controller_manager_msgs/SwitchController.h>
 
-namespace agile_demo_motion {
+namespace agile_demo {
+namespace motion {
 
 MotionPlanner::MotionPlanner(ros::NodeHandle & node) :
 	joint_action_client{node, "/pos_based_pos_traj_controller/follow_joint_trajectory", true},
@@ -95,17 +95,4 @@ void MotionPlanner::jointStateCallback(sensor_msgs::JointState const & joint_sta
 	current_joint_state = joint_state;
 }
 
-}
-
-int main(int argc, char** argv) {
-	ros::init(argc, argv, "motion_planner");
-	ros::NodeHandle node_handle{"~"};
-
-	Eigen::Isometry3d pose = Eigen::Translation3d{0.162, 0.334, 0.128} * Eigen::Quaterniond(0.487, -0.500, 0.512, 0.500);
-	agile_demo_motion::MotionPlanner motion_planner{node_handle};
-	motion_planner.moveToGoal(pose);
-
-	ros::spin();
-	return 0;
-
-}
+}}

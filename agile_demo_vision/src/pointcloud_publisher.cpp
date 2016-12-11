@@ -7,7 +7,8 @@
 #include <pcl/common/transforms.h>
 #include <ros/ros.h>
 
-namespace agile_demo_vision {
+namespace agile_demo {
+namespace vision {
 
 PointCloudPublisher::PointCloudPublisher() : nh_{"~"} {
 	ros::Rate publish_rate{0.01};
@@ -54,11 +55,11 @@ bool PointCloudPublisher::publishPointCloud(agile_demo_msgs::PublishPointCloud::
 	return true;
 }
 
-}
+}}
 
 int main(int argc, char * * argv) {
 	ros::init(argc, argv, "point_cloud_publisher");
-	agile_demo_vision::PointCloudPublisher pointcloud_publisher;
+	agile_demo::vision::PointCloudPublisher pointcloud_publisher;
 	ros::spin();
 	return 0;
 }

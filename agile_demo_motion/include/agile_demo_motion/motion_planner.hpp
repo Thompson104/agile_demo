@@ -7,7 +7,8 @@
 #include <sensor_msgs/JointState.h>
 #include <trac_ik/trac_ik.hpp>
 
-namespace agile_demo_motion {
+namespace agile_demo {
+namespace motion {
 
 using JointTrajectoryClient = actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>;
 
@@ -62,4 +63,4 @@ protected:
 
 };
 
-}
+}}
