@@ -41,18 +41,12 @@ include_directories(
 )
 
 add_executable(motion_planner src/motion_planner.cpp)
-add_executable(agile_ik_tests src/ik_tests.cpp)
-target_link_libraries(agile_ik_tests
-	${catkin_LIBRARIES}
-	${Boost_LIBRARIES}
-	${orocos_kdl_LIBRARIES}
-)
 
 target_link_libraries(motion_planner
 	${catkin_LIBRARIES}
 )
 
-install(TARGETS agile_ik_tests
+install(TARGETS motion_planner
 	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
