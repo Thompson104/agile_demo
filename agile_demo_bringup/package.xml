@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-	<name>agile_demo_launch</name>
+	<name>agile_demo_bringup</name>
 	<version>0.0.0</version>
-	<description>The agile_demo_launch package</description>
+	<description>The agile_demo_bringup package</description>
 	<license>GPLv3</license>
 
 	<maintainer email="w.k.h.ko91@gmail.com">Wilson Ko</maintainer>

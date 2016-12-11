@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <launch>
-	<!--arg name="robot_ip"                   />
-	<arg name="min_payload"  default="0.0" />
-	<arg name="max_payload"  default="5.0" />
-	<arg name="prefix" default="ur_"       /-->
+	<arg name="robot_ip"     default ="localhost"                     />
+	<arg name="min_payload"  default ="0.0"                           />
+	<arg name="max_payload"  default ="5.0"                           />
+	<arg name="prefix"       default ="ur_"                           />
+	<arg name="max_velocity" default ="10.0"                          /> <!-- [rad/s] -->
+	<arg name="base_frame"   default ="$(arg prefix)base"             />
+	<arg name="tool_frame"   default ="$(arg prefix)tool0_controller" />
 
 	<arg name="cloud_topic"     default ="/camera/depth_registered/points"           />
 	<arg name="cloud_frame"     default ="world"                                     />
@@ -16,9 +19,17 @@
 	<arg name="plotting"        default ="2"                                         />
 	<arg name="marker_lifetime" default ="5"                                         />
 
-	<!--include file="$(find demo)/launch/robot_description.launch" /-->
+	<include file ="$(find ur_modern_driver)/launch/ur5_ros_control.launch">
+		<arg name="robot_ip"     value ="$(arg robot_ip)"     />
+		<arg name="min_payload"  value ="$(arg min_payload)"  />
+		<arg name="max_payload"  value ="$(arg max_payload)"  />
+		<arg name="prefix"       value ="$(arg prefix)"       />
+		<arg name="max_velocity" value ="$(arg max_velocity)" /> <!-- [rad/s] -->
+		<arg name="base_frame"   value ="$(arg base_frame)"   />
+		<arg name="tool_frame"   value ="$(arg tool_frame)"   />
+	</include>
 
-	<include file = "$(find agile_grasp)/launch/single_camera_grasps.launch">
+	<include file ="$(find agile_grasp)/launch/single_camera_grasps.launch">
 		<arg name="cloud_topic"     value ="$(arg cloud_topic)"     />
 		<arg name="cloud_frame"     value ="$(arg cloud_frame)"     />
 		<arg name="cloud_type"      value ="$(arg cloud_type)"      />
@@ -32,5 +43,6 @@
 	</include>
 
 	<node name ="pointcloud_publisher" pkg="agile_demo_vision" type="pointcloud_publisher" output="screen" />
+	<node name ="coordinator" pkg="agile_demo_core" type="coordinator" output="screen" />
 
 </launch>
