@@ -24,19 +24,8 @@ MotionPlanner::MotionPlanner(ros::NodeHandle & node) :
 	}
 
 	joint_names       = dr::getParam<std::vector<std::string>>(node, "/pos_based_pos_traj_controller/joints", joint_names);
-	controller_client = node.serviceClient<controller_manager_msgs::SwitchController>("/controller_manager/switch_controller", true);
 	joint_state_sub   = node.subscribe("/joint_states", 1, &MotionPlanner::jointStateCallback, this);
-
 	joint_action_client.waitForServer();
-
-	if (!controller_client.exists()) throw std::runtime_error("Controller manager is not running.");
-
-	controller_manager_msgs::SwitchController srv;
-	srv.request.start_controllers.push_back("pos_based_pos_traj_controller");
-	srv.request.stop_controllers.push_back("vel_based_pos_traj_controller");
-	srv.request.strictness = 0;
-
-	if(!controller_client.call(srv)) throw std::runtime_error("Failed to switch controllers.");
 
 	ROS_INFO_STREAM("Motion planner is initialised!");
 }

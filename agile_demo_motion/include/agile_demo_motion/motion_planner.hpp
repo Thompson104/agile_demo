@@ -17,9 +17,6 @@ protected:
 	/// Action client for sending joint trajectories to follow.
 	JointTrajectoryClient joint_action_client;
 
-	/// Service client for switching controllers.
-	ros::ServiceClient controller_client;
-
 	/// Subscriber for current joint state.
 	ros::Subscriber joint_state_sub;
 
