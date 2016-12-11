@@ -19,7 +19,7 @@
 	<arg name="plotting"        default ="2"                                         />
 	<arg name="marker_lifetime" default ="5"                                         />
 
-	<include file ="$(find ur_modern_driver)/launch/ur5_ros_control.launch">
+	<include file ="$(find agile_demo_bringup)/launch/ur5_ros_control.launch">
 		<arg name="robot_ip"     value ="$(arg robot_ip)"     />
 		<arg name="min_payload"  value ="$(arg min_payload)"  />
 		<arg name="max_payload"  value ="$(arg max_payload)"  />
