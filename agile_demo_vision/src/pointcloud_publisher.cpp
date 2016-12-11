@@ -10,11 +10,11 @@
 namespace agile_demo {
 namespace vision {
 
-PointCloudPublisher::PointCloudPublisher() : nh_{"~"} {
+PointCloudPublisher::PointCloudPublisher() : node_{"~"} {
 	ros::Rate publish_rate{0.01};
-	pointcloud_pub_         = nh_.advertise<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 10, true);
-	pub_pointcloud_server_  = nh_.advertiseService("publish_point_cloud", &PointCloudPublisher::publishPointCloud, this);
-	publish_timer_          = nh_.createTimer(publish_rate, &PointCloudPublisher::onPublishPointCloud, this);
+	pointcloud_pub_         = node_.advertise<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 10, true);
+	pub_pointcloud_server_  = node_.advertiseService("publish_point_cloud", &PointCloudPublisher::publishPointCloud, this);
+	publish_timer_          = node_.createTimer(publish_rate, &PointCloudPublisher::onPublishPointCloud, this);
 
 	ROS_INFO_STREAM("Point cloud publisher initialised!");
 }

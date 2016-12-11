@@ -17,7 +17,7 @@ using PointCloud = pcl::PointCloud<Point>;
 class PointCloudPublisher {
 private:
 	/// Node handle.
-	ros::NodeHandle nh_;
+	ros::NodeHandle node_;
 
 	/// The pointcloud to publish.
 	sensor_msgs::PointCloud2 point_cloud_;
@@ -31,14 +31,15 @@ private:
 	/// Time to periodically publish a pointcloud.
 	ros::Timer publish_timer_;
 
-	/// Callback for timer.
-	void onPublishPointCloud(ros::TimerEvent const &);
-
 public:
 	PointCloudPublisher();
 
 	/// Publish a point cloud from file.
 	bool publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response &);
+
+private:
+	/// Callback for timer.
+	void onPublishPointCloud(ros::TimerEvent const &);
 };
 
 }}

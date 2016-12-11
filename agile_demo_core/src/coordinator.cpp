@@ -1,7 +1,38 @@
 #include "coordinator.hpp"
 
+#include <ros/package.h>
 #include <agile_demo_msgs/PublishPointCloud.h>
 #include <dr_eigen/ros.hpp>
+
+namespace {
+	/// Find model path from url.
+	/// Code from http://docs.ros.org/jade/api/resource_retriever/html/retriever_8cpp_source.html
+	std::string resolvePackagePath(const std::string & url) {
+		std::string mod_url = url;
+		if (url.find("package://") == 0) {
+			mod_url.erase(0, strlen("package://"));
+			size_t pos = mod_url.find("/");
+			if (pos == std::string::npos) {
+				std::cout << "Could not parse package:// format into file:// format\n";
+				return url;
+			}
+
+			std::string package = mod_url.substr(0, pos);
+			mod_url.erase(0, pos);
+			std::string package_path = ros::package::getPath(package);
+
+			if (package_path.empty()) {
+				std::cout << "Package [" + package + "] does not exist \n";
+				return url;
+			}
+
+			mod_url = package_path + mod_url;
+			return mod_url;
+		}
+
+		return url;
+	}
+}
 
 namespace agile_demo {
 namespace core {
@@ -11,21 +42,28 @@ Coordinator::Coordinator() try :
 	grasp_planner_{node_},
 	motion_planner_{node_}
 {
-	vision_client_ = node_.serviceClient<agile_demo_msgs::PublishPointCloud>("/pointcloud_publisher/publish_point_cloud", true);
+	vision_client_  = node_.serviceClient<agile_demo_msgs::PublishPointCloud>("/pointcloud_publisher/publish_point_cloud", true);
+	command_server_ = node_.advertiseService("command", &Coordinator::execute, this);
 
 	if (!vision_client_.waitForExistence(ros::Duration(5.0))) ROS_ERROR_STREAM("Vision service is not running.");
 
-	Eigen::Isometry3d pose = Eigen::Translation3d{0.20, 0.30, 0.1} * Eigen::Quaterniond{0.0, 0.0, 0.0, 1.0};
-	agile_demo_msgs::PublishPointCloud srv;
-	srv.request.pose          = dr::toRosPose(pose);
-	srv.request.pcd_path = "/home/wko/dev/demo_workspace/src/agile_demo/agile_demo_vision/data/easter_turtle_sippy_cup.pcd";
-
-	vision_client_.call(srv);
-	Eigen::Isometry3d grasp = *grasp_planner_.findGrasp();
-	motion_planner_.moveToGoal(grasp);
+	ROS_INFO_STREAM("Coordinator started.");
 
 } catch (std::exception const & e) {
 	ROS_ERROR_STREAM(e.what());
+}
+
+bool Coordinator::execute(agile_demo_msgs::Command::Request & req, agile_demo_msgs::Command::Response &) {
+	agile_demo_msgs::PublishPointCloud srv;
+	srv.request.pcd_path = resolvePackagePath("package://agile_demo_vision/data/easter_turtle_sippy_cup.pcd");
+
+	srv.request.pose = req.pose;
+	while (!vision_client_.call(srv)) {
+		ros::spinOnce();
+	}
+
+	Eigen::Isometry3d grasp = *grasp_planner_.findGrasp();
+	return motion_planner_.moveToGoal(grasp);
 }
 
 }}

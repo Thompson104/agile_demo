@@ -3,6 +3,7 @@
 #include <ros/ros.h>
 #include <agile_demo_motion/grasp_planner.hpp>
 #include <agile_demo_motion/motion_planner.hpp>
+#include <agile_demo_msgs/Command.h>
 
 namespace agile_demo {
 namespace core {
@@ -21,6 +22,9 @@ private:
 	/// Vision service client.
 	ros::ServiceClient vision_client_;
 
+	/// Command server.
+	ros::ServiceServer command_server_;
+
 public:
 	/// Constructor.
 	Coordinator();
@@ -28,6 +32,9 @@ public:
 	/// Destructor.
 	~Coordinator() {};
 
+private:
+	/// Execute a command.
+	bool execute(agile_demo_msgs::Command::Request & req, agile_demo_msgs::Command::Response &);
 };
 
 }}
