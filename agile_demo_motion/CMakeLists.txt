@@ -40,21 +40,11 @@ include_directories(
 	${catkin_INCLUDE_DIRS}
 )
 
-add_executable(motion_planner src/motion_planner.cpp)
-add_executable(grasp_planner src/grasp_planner.cpp)
+add_library(${PROJECT_NAME}
+	src/motion_planner.cpp
+	src/grasp_planner.cpp
+)
 
-target_link_libraries(motion_planner
+target_link_libraries(${PROJECT_NAME}
 	${catkin_LIBRARIES}
 )
-
-target_link_libraries(grasp_planner
-	${catkin_LIBRARIES}
-)
-
-install(TARGETS motion_planner
-	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
