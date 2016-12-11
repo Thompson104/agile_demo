@@ -28,7 +28,7 @@ void PointCloudPublisher::onPublishPointCloud(ros::TimerEvent const &) {
 bool PointCloudPublisher::publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response &) {
 	// Read model
 	PointCloud::Ptr model = boost::make_shared<PointCloud>();
-	if (pcl::io::loadPCDFile(req.pcd_path.data, *model) == -1) {
+	if (pcl::io::loadPCDFile(req.pcd_path, *model) == -1) {
 		ROS_ERROR_STREAM("No model found. Model path: " << req.pcd_path);
 		return false;
 	}
