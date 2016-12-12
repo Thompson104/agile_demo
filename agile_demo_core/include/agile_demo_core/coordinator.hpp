@@ -3,7 +3,6 @@
 #include <ros/ros.h>
 #include <agile_demo_motion/grasp_planner.hpp>
 #include <agile_demo_motion/motion_planner.hpp>
-#include <agile_demo_msgs/Command.h>
 #include <std_srvs/Empty.h>
 
 namespace agile_demo {
