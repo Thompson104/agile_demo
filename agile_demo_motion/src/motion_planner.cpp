@@ -66,7 +66,7 @@ bool MotionPlanner::cartToAction(Eigen::Isometry3d const & goal, boost::optional
 			joint_pos,
 			{{1.0, 1.0, 1.0, 1.0, 1.0, 1.0}},
 			joint_names,
-			0.5
+			distance(joint_pos, current_joint_state->position)
 		);
 	} catch (std::runtime_error const & e) {
 		ROS_ERROR_STREAM(e.what());

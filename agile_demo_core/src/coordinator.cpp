@@ -74,7 +74,7 @@ bool Coordinator::execute(std_srvs::Empty::Request &, std_srvs::Empty::Response 
 		return false;
 	}
 
-	if (!motion_planner_.moveToGoal(*action, 2.0)) {
+	if (!motion_planner_.moveToGoal(*action, 1.0)) {
 		ROS_WARN_STREAM("Failed to move to goal.");
 		return false;
 	}
