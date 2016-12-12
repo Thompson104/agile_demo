@@ -19,27 +19,17 @@ private:
 	/// Node handle.
 	ros::NodeHandle node_;
 
-	/// The pointcloud to publish.
-	sensor_msgs::PointCloud2 point_cloud_;
-
 	/// Ros publisher for pointclouds.
 	ros::Publisher pointcloud_pub_;
 
 	/// Ros server for publishing a pointcloud.
 	ros::ServiceServer pub_pointcloud_server_;
 
-	/// Time to periodically publish a pointcloud.
-	ros::Timer publish_timer_;
-
 public:
 	PointCloudPublisher();
 
 	/// Publish a point cloud from file.
 	bool publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response &);
-
-private:
-	/// Callback for timer.
-	void onPublishPointCloud(ros::TimerEvent const &);
 };
 
 }}

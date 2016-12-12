@@ -14,15 +14,8 @@ PointCloudPublisher::PointCloudPublisher() : node_{"~"} {
 	ros::Rate publish_rate{0.01};
 	pointcloud_pub_         = node_.advertise<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 10, true);
 	pub_pointcloud_server_  = node_.advertiseService("publish_point_cloud", &PointCloudPublisher::publishPointCloud, this);
-	publish_timer_          = node_.createTimer(publish_rate, &PointCloudPublisher::onPublishPointCloud, this);
 
 	ROS_INFO_STREAM("Point cloud publisher initialised!");
-}
-
-void PointCloudPublisher::onPublishPointCloud(ros::TimerEvent const &) {
-	ros::Time now = ros::Time::now();
-	point_cloud_.header.stamp = now;
-	pointcloud_pub_.publish(point_cloud_);
 }
 
 bool PointCloudPublisher::publishPointCloud(agile_demo_msgs::PublishPointCloud::Request & req, agile_demo_msgs::PublishPointCloud::Response &) {
@@ -45,12 +38,14 @@ bool PointCloudPublisher::publishPointCloud(agile_demo_msgs::PublishPointCloud::
 	Eigen::Isometry3d parent_frame = dr::toEigen(req.pose);
 	Eigen::Affine3d affine_parent_frame{parent_frame.matrix()};
 
+	/// The pointcloud to publish.
+	sensor_msgs::PointCloud2 point_cloud;
 	pcl::transformPointCloud(*model, transformed_point_cloud, affine_parent_frame);
-	pcl::toROSMsg(transformed_point_cloud, point_cloud_);
-	point_cloud_.header.frame_id = "world";
+	pcl::toROSMsg(transformed_point_cloud, point_cloud);
 
-	ros::TimerEvent event;
-	onPublishPointCloud(event);
+	point_cloud.header.stamp    = ros::Time::now();
+	point_cloud.header.frame_id = "world";
+	pointcloud_pub_.publish(point_cloud);
 
 	return true;
 }

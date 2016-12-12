@@ -46,14 +46,11 @@ public:
 	/// Destructor.
 	~MotionPlanner() {};
 
-	/// Get current joint state.
-	sensor_msgs::JointState currentJointState();
-
 	/// Move robot with a FollowJointTrajectoryGoal command.
-	bool moveToGoal(control_msgs::FollowJointTrajectoryGoal const & goal, double timeout = 5.0);
+	bool moveToGoal(control_msgs::FollowJointTrajectoryGoal const & goal, double timeout = 2.0);
 
 	/// Move robot with a tool pose command.
-	bool moveToGoal(Eigen::Isometry3d const & goal);
+	bool cartToAction(Eigen::Isometry3d const & goal, boost::optional<control_msgs::FollowJointTrajectoryGoal> & action);
 
 protected:
 	void jointStateCallback(sensor_msgs::JointState const & joint_state);

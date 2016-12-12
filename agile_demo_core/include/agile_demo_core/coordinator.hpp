@@ -4,6 +4,7 @@
 #include <agile_demo_motion/grasp_planner.hpp>
 #include <agile_demo_motion/motion_planner.hpp>
 #include <agile_demo_msgs/Command.h>
+#include <std_srvs/Empty.h>
 
 namespace agile_demo {
 namespace core {
@@ -34,7 +35,7 @@ public:
 
 private:
 	/// Execute a command.
-	bool execute(agile_demo_msgs::Command::Request & req, agile_demo_msgs::Command::Response &);
+	bool execute(std_srvs::Empty::Request &, std_srvs::Empty::Response &);
 };
 
 }}

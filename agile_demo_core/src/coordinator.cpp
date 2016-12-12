@@ -47,23 +47,39 @@ Coordinator::Coordinator() try :
 
 	if (!vision_client_.waitForExistence(ros::Duration(5.0))) ROS_ERROR_STREAM("Vision service is not running.");
 
-	ROS_INFO_STREAM("Coordinator started.");
+	agile_demo_msgs::PublishPointCloud srv;
+	srv.request.pcd_path = resolvePackagePath("package://agile_demo_vision/data/easter_turtle_sippy_cup.pcd");
+	srv.request.pose     = dr::toRosPose(Eigen::Translation3d{-0.070, 0.470, 0.0} * Eigen::Quaterniond::Identity());
 
+	if (!vision_client_.call(srv)) {
+		ROS_ERROR_STREAM("Failed to retrieve vision data.");
+	}
+
+	ROS_INFO_STREAM("Coordinator started.");
 } catch (std::exception const & e) {
 	ROS_ERROR_STREAM(e.what());
 }
 
-bool Coordinator::execute(agile_demo_msgs::Command::Request & req, agile_demo_msgs::Command::Response &) {
-	agile_demo_msgs::PublishPointCloud srv;
-	srv.request.pcd_path = resolvePackagePath("package://agile_demo_vision/data/easter_turtle_sippy_cup.pcd");
+bool Coordinator::execute(std_srvs::Empty::Request &, std_srvs::Empty::Response &) {
+	boost::optional<control_msgs::FollowJointTrajectoryGoal> action;
 
-	srv.request.pose = req.pose;
-	while (!vision_client_.call(srv)) {
-		ros::spinOnce();
+	boost::optional<Eigen::Isometry3d> grasp = grasp_planner_.findGrasp();
+	if (!grasp) {
+		ROS_WARN_STREAM("Grasp vector is empty.");
+		return false;
 	}
 
-	Eigen::Isometry3d grasp = *grasp_planner_.findGrasp();
-	return motion_planner_.moveToGoal(grasp);
+	if (!motion_planner_.cartToAction(*grasp, action)) {
+		ROS_WARN_STREAM("No inverse kinematics solution, please try next grasp or place the object within reach.");
+		return false;
+	}
+
+	if (!motion_planner_.moveToGoal(*action, 2.0)) {
+		ROS_WARN_STREAM("Failed to move to goal.");
+		return false;
+	}
+
+	return true;
 }
 
 }}

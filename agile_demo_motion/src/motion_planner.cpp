@@ -30,10 +30,6 @@ MotionPlanner::MotionPlanner(ros::NodeHandle & node) :
 	ROS_INFO_STREAM("Motion planner is initialised!");
 }
 
-sensor_msgs::JointState MotionPlanner::currentJointState() {
-	return *current_joint_state;
-}
-
 bool MotionPlanner::moveToGoal(control_msgs::FollowJointTrajectoryGoal const & goal, double timeout) {
 	joint_action_client.sendGoal(goal);
 	joint_action_client.waitForResult(ros::Duration(timeout));
@@ -46,9 +42,10 @@ bool MotionPlanner::moveToGoal(control_msgs::FollowJointTrajectoryGoal const & g
 	}
 }
 
-bool MotionPlanner::moveToGoal(Eigen::Isometry3d const & goal) {
+bool MotionPlanner::cartToAction(Eigen::Isometry3d const & goal, boost::optional<control_msgs::FollowJointTrajectoryGoal> & action) {
 	KDL::Frame kdl_goal;
 	tf::transformEigenToKDL(goal, kdl_goal);
+	action = boost::none;
 
 	while (!current_joint_state) {
 		ROS_WARN_THROTTLE(5, "Still waiting for joint state message.");
@@ -63,21 +60,20 @@ bool MotionPlanner::moveToGoal(Eigen::Isometry3d const & goal) {
 		return false;
 	}
 
-	control_msgs::FollowJointTrajectoryGoal action_goal;
 	try {
 		std::vector<double> joint_pos = fromKDLJoints(result);
-		action_goal = constructGoal(
+		action = constructGoal(
 			joint_pos,
 			{{1.0, 1.0, 1.0, 1.0, 1.0, 1.0}},
 			joint_names,
-			distance(joint_pos, current_joint_state->position)
+			0.5
 		);
 	} catch (std::runtime_error const & e) {
 		ROS_ERROR_STREAM(e.what());
 		return false;
 	}
 
-	return moveToGoal(action_goal);
+	return true;
 }
 
 void MotionPlanner::jointStateCallback(sensor_msgs::JointState const & joint_state) {

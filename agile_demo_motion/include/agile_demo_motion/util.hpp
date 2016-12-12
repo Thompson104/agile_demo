@@ -67,11 +67,13 @@ namespace {
 		return goal;
 	}
 
+	/// Calculate distance between two Eigen vectors (currently unused).
 	double distance(Eigen::VectorXd const & a, Eigen::VectorXd const & b) {
 		if (a.rows() != b.rows()) throw std::runtime_error{"Failed to calculate joint distance due to unmatching sizes."};
 		return (a - b).norm();
 	}
 
+	/// Calculate distance between two vectors of doubles (currently unused).
 	double distance(std::vector<double> const & a, std::vector<double> const & b) {
 		return distance(toEigen(a), toEigen(b));
 	}
